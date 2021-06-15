@@ -10,9 +10,9 @@ metadata:
   name: gasservice
 spec:
   ports:
-  - name: "8091"
-    port: 8091
-    targetPort: 8091
+    - protocol: TCP
+      port: 80
+      targetPort: 8091
   selector:
     io.kompose.service: gasservice
 status:
