@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -o kompose
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: sunservice
+  name: sunservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: sunservice
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -o kompose
+        kompose.version: 1.21.0 (992df58d8)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: sunservice
+    spec:
+      containers:
+      - image: s631egn/sunservice
+        imagePullPolicy: ""
+        name: sunservice
+        ports:
+        - containerPort: 8088
+        resources: {}
+      hostname: sunservice
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes: null
+status: {}

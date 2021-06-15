@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -o kompose
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: windservice
+  name: windservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: windservice
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -o kompose
+        kompose.version: 1.21.0 (992df58d8)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: windservice
+    spec:
+      containers:
+      - image: s631egn/windservice
+        imagePullPolicy: ""
+        name: windservice
+        ports:
+        - containerPort: 8086
+        resources: {}
+      hostname: windservice
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes: null
+status: {}
