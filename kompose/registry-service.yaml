@@ -3,6 +3,7 @@ kind: Service
 metadata:
   annotations:
     kompose.cmd: kompose convert -o kompose
+    kompose.service.type: NodePort
     kompose.version: 1.21.0 (992df58d8)
   creationTimestamp: null
   labels:
@@ -15,5 +16,6 @@ spec:
     targetPort: 8083
   selector:
     io.kompose.service: registry
+  type: NodePort
 status:
   loadBalancer: {}

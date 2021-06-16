@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   annotations:
     kompose.cmd: kompose convert -o kompose
+    kompose.service.type: NodePort
     kompose.version: 1.21.0 (992df58d8)
   creationTimestamp: null
   labels:
@@ -18,13 +19,17 @@ spec:
     metadata:
       annotations:
         kompose.cmd: kompose convert -o kompose
+        kompose.service.type: NodePort
         kompose.version: 1.21.0 (992df58d8)
       creationTimestamp: null
       labels:
         io.kompose.service: website
     spec:
       containers:
-      - image: s631egn/dashboard:latest
+      - env:
+        - name: GET_HOSTS_FROM
+          value: dns
+        image: s631egn/dashboard:latest
         imagePullPolicy: ""
         name: frontend
         ports:

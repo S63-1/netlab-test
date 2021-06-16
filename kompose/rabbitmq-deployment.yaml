@@ -3,6 +3,7 @@ kind: Deployment
 metadata:
   annotations:
     kompose.cmd: kompose convert -o kompose
+    kompose.service.type: NodePort
     kompose.version: 1.21.0 (992df58d8)
   creationTimestamp: null
   labels:
@@ -18,6 +19,7 @@ spec:
     metadata:
       annotations:
         kompose.cmd: kompose convert -o kompose
+        kompose.service.type: NodePort
         kompose.version: 1.21.0 (992df58d8)
       creationTimestamp: null
       labels:
@@ -26,15 +28,6 @@ spec:
       containers:
       - image: rabbitmq:3-management
         imagePullPolicy: ""
-        livenessProbe:
-          exec:
-            command:
-            - curl
-            - -f
-            - http://rabbitmq:5672
-          failureThreshold: 1
-          periodSeconds: 5
-          timeoutSeconds: 15
         name: rabbitmq
         ports:
         - containerPort: 5672
