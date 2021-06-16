@@ -96,7 +96,7 @@ services:
     ##################################
     ##         Database             ##
     ##################################
-    database:
+    userdatabase:
         image: mysql:latest
         container_name: userdb
         tty: true
@@ -108,6 +108,22 @@ services:
             kompose.service.type: NodePort
         ports:
             - "3307:3306"
+        restart: always
+        cap_add: 
+            - SYS_NICE
+
+    invoicedatabase:
+        image: mysql:latest
+        container_name: invoicedb
+        tty: true
+        command: --default-authentication-plugin=mysql_native_password
+        environment:
+            MYSQL_ROOT_PASSWORD: my-secret-pew
+            MYSQL_DATABASE: invoicedb
+        labels:
+            kompose.service.type: NodePort
+        ports:
+            - "3308:3306"
         restart: always
         cap_add: 
             - SYS_NICE
@@ -148,13 +164,13 @@ services:
         hostname: userservice
         image: s631egn/userservice
         environment: 
-            SPRING_DATASOURCE_URL: jdbc:mysql://database:3306/userdb?autoReconnect=true&useSSL=false
+            SPRING_DATASOURCE_URL: jdbc:mysql://userdatabase:3306/userdb?autoReconnect=true&useSSL=false
         labels:
             kompose.service.type: NodePort
         ports:
             - 8089:8089
         depends_on: 
-            - database
+            - userdatabase
     
     meteoserver:
         container_name: meteoserver
@@ -199,3 +215,28 @@ services:
             kompose.service.type: NodePort
         depends_on: 
             - rabbitconsumer
+
+    marketservice:
+        container_name: marketservice
+        hostname: marketservice
+        image: s631egn/marketservice
+        ports: 
+            - 8101:8101
+        labels:
+            kompose.service.type: NodePort
+        depends_on: 
+            - rabbitconsumer
+
+    invoiceservice:
+        container_name: invoiceservice
+        hostname: invoiceservice
+        image: s631egn/invoiceservice
+        environment: 
+            SPRING_DATASOURCE_URL: jdbc:mysql://invoicedatabase:3306/invoicedb?autoReconnect=true&useSSL=false
+        ports: 
+            - 8899:8899
+        labels:
+            kompose.service.type: NodePort
+        depends_on: 
+            - rabbitconsumer
+            - invoicedatabase
