@@ -141,8 +141,10 @@ services:
             - 9090:9090
         volumes:
             - ./config:/prometheus
+            - ./data/prometheus:/data
         command: 
-            - '--config.file=/config/prometheus.yml'
+            - '--config.file=/prometheus/prometheus.yml'
+            - '--storage.tsdb.path=/data'
     
     grafana:
         image: grafana/grafana
@@ -151,7 +153,13 @@ services:
         labels:
             kompose.service.type: NodePort
         ports:
-            - 3001:3001
+            - 3001:3000
+        #volumes:
+        #    - ./grafana-storage:/conf
+        environment: 
+            - GF_SERVER_HTTP_PORT=3001
+        #command:
+        #    - '--custom.ini=/conf/custom.ini'
         depends_on: 
             - prometheus
 
@@ -169,8 +177,10 @@ services:
             kompose.service.type: NodePort
         ports:
             - 8089:8089
-        depends_on: 
+        depends_on:
+            - rabbitconsumer 
             - userdatabase
+            - gateway
     
     meteoserver:
         container_name: meteoserver
@@ -182,6 +192,7 @@ services:
             - 8082:8082
         depends_on: 
             - rabbitconsumer
+            - gateway
     
     sunservice:
         container_name: sunservice
@@ -193,6 +204,7 @@ services:
             - 8088:8088
         depends_on: 
             - rabbitconsumer
+            - gateway
 
     windservice:
         container_name: windservice
@@ -204,6 +216,7 @@ services:
             - 8086:8086
         depends_on: 
             - rabbitconsumer
+            - gateway
 
     gasservice:
         container_name: gasservice
@@ -215,6 +228,7 @@ services:
             kompose.service.type: NodePort
         depends_on: 
             - rabbitconsumer
+            - gateway
 
     marketservice:
         container_name: marketservice
@@ -226,6 +240,7 @@ services:
             kompose.service.type: NodePort
         depends_on: 
             - rabbitconsumer
+            - gateway
 
     invoiceservice:
         container_name: invoiceservice
@@ -240,3 +255,4 @@ services:
         depends_on: 
             - rabbitconsumer
             - invoicedatabase
+            - gateway
